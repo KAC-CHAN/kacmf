@@ -19,12 +19,12 @@ def ban_all_members(channel_id):
         app.kick_chat_member(channel_id, user_id)
 
 # Filter private messages from the bot owner
-@filters.private
+@Client.on_message(filters.private)
 def handle_private_message(client, message):
     if message.text == '/banall':
         # Replace with the specific channel ID and owner ID
-        channel_id = '-1001918883387'
-        owner_id = '6053757293'
+        channel_id = 'SPECIFIC_CHANNEL_ID'
+        owner_id = 'BOT_OWNER_ID'
 
         # Verify that the message is from the bot owner
         if message.from_user.id == owner_id:
@@ -32,9 +32,6 @@ def handle_private_message(client, message):
             message.reply_text('All members have been banned from the channel.')
         else:
             message.reply_text('You are not authorized to use this command.')
-
-# Register the private message handler
-app.add_handler(handle_private_message)
 
 # Start the bot
 app.run()
