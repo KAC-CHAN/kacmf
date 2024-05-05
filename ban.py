@@ -1,12 +1,5 @@
 from pyrogram import Client, filters
 
-# Replace with your API credentials
-api_id = 26788480
-api_hash = '858d65155253af8632221240c535c314'
-bot_token = '6724157332:AAG27x7CwHkg8N52IpQxCobn0VQ_r9_mT2E'
-
-from pyrogram import Client, filters
-
 # Replace with your own values
 api_id = 26788480
 api_hash = '858d65155253af8632221240c535c314'
