@@ -24,7 +24,7 @@ def remove_all_subscribers(client, message):
             for member in members:
                 if member.user.is_bot:
                     continue  # Skip removing bots from the channel
-                client.kick_chat_member(channel_id, member.user.id)
+                client.ban_chat_member(channel_id, member.user.id)
             
             # Send a confirmation message to the bot owner
             message.reply_text("All subscribers have been removed from the channel.")
