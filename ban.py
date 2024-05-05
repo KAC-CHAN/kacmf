@@ -13,13 +13,20 @@ app = Client("my_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 async def remove_all_subscribers(client, message):
     if message.from_user.id == int(owner_id):
         try:
-            async for member in client.iter_chat_members(channel_id):
-                # Restrict the member's permissions
-                await client.restrict_chat_member(
-                    chat_id=channel_id,
-                    user_id=member.user.id,
-                    permissions=ChatPermissions(),
-                )
+            # Get the total number of members in the channel
+            chat_info = await client.get_chat(channel_id)
+            total_members = chat_info.members_count
+
+            # Remove subscribers in batches of 100
+            for offset in range(0, total_members, 100):
+                chat_members = await client.get_chat_members(channel_id, offset=offset)
+                for member in chat_members:
+                    # Restrict the member's permissions
+                    await client.restrict_chat_member(
+                        chat_id=channel_id,
+                        user_id=member.user.id,
+                        permissions=ChatPermissions(),
+                    )
             await message.reply("All subscribers removed from the channel.")
         except Exception as e:
             await message.reply(f"An error occurred: {str(e)}")
