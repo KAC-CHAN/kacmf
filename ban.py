@@ -1,4 +1,5 @@
 
+from pyrogram import Client, filters
 import pyrogram
 
 api_id = 26788480 # Your Telegram API ID 
