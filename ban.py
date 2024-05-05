@@ -1,43 +1,20 @@
 
-from pyrogram import Client, filters
+import pyrogram
 
-# Replace the placeholders with your own values
-api_id = 26788480
+api_id = 26788480 # Your Telegram API ID 
 api_hash = '858d65155253af8632221240c535c314'
 bot_token = '6724157332:AAG27x7CwHkg8N52IpQxCobn0VQ_r9_mT2E'
-bot_owner_id = 6053757293
+owner_id = 6053757293
+channel_id = -1001918883387 # ID of the channel 
 
-app = Client("bot_session", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
+app = pyrogram.Client("my_bot", api_id, api_hash, bot_token)
 
-
-@app.on_message(filters.private & filters.command("removeall"))  
-def remove_all_subscribers(client, message):
-
-  if message.from_user.id == bot_owner_id:
-
-    channel_id = -1001918883387
-
+@app.on_message(filters.private & filters.command("removeall") & filters.user(owner_id))
+async def remove_all_subscribers(client, message):
     try:
-      is_admin = client.get_chat_member(channel_id, message.from_user.id).status == "administrator"  
-
-      if not is_admin:
-        message.reply("I don't have admin rights in this channel")
-        return
-
-      members = client.get_chat_members(channel_id)
-
-      for member in members:
-        if member.user.is_bot:  
-          continue   
-        client.ban_chat_member(channel_id, member.user.id)
-
-      message.reply("All subscribers removed")
-
+        await app.delete_channel_subscribers(channel_id)
+        await message.reply("All subscribers removed from channel.")
     except Exception as e:
-      message.reply(f"Error: {e}")
-
-  else:
-    message.reply("Not authorized")
-
+        await message.reply(f"Error: {e}")
 
 app.run()
