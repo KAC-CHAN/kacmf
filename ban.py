@@ -10,30 +10,34 @@ bot_owner_id = 6053757293
 app = Client("bot_session", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
 
-@app.on_message(filters.private & filters.command("removeall"))
+@app.on_message(filters.private & filters.command("removeall"))  
 def remove_all_subscribers(client, message):
-    if message.from_user.id == bot_owner_id:
-        # Replace the placeholder with the channel ID from which you want to remove subscribers
-        channel_id = -1001918883387
 
-        try:
-            # Get a list of all channel members
-            members = client.get_chat_members(channel_id)
+  if message.from_user.id == bot_owner_id:
 
-            # Remove all subscribers from the channel
-            for member in members:
-                if member.user.is_bot:
-                    continue  # Skip removing bots from the channel
-                client.ban_chat_member(channel_id, member.user.id)
-            
-            # Send a confirmation message to the bot owner
-            message.reply_text("All subscribers have been removed from the channel.")
-        
-        except Exception as e:
-            message.reply_text("An error occurred while removing subscribers: " + str(e))
-    
-    else:
-        message.reply_text("You are not authorized to use this command.")
+    channel_id = -1001918883387
+
+    try:
+      is_admin = client.get_chat_member(channel_id, message.from_user.id).status == "administrator"  
+
+      if not is_admin:
+        message.reply("I don't have admin rights in this channel")
+        return
+
+      members = client.get_chat_members(channel_id)
+
+      for member in members:
+        if member.user.is_bot:  
+          continue   
+        client.ban_chat_member(channel_id, member.user.id)
+
+      message.reply("All subscribers removed")
+
+    except Exception as e:
+      message.reply(f"Error: {e}")
+
+  else:
+    message.reply("Not authorized")
 
 
 app.run()
