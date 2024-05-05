@@ -10,11 +10,10 @@ channel_id = -1001918883387 # ID of the channel
 
 app = pyrogram.Client("my_bot", api_id, api_hash, bot_token)
 
-@app.on_message(filters.private & filters.command("removeall") & filters.user(owner_id))  
+@app.on_message(filters.private & filters.command("removeall") & filters.user(owner_id))   
 async def remove_all_subscribers(client, message):
     
     try:
-        await app.chat_action(chat_id=channel_id, action="typing")
         
         resp = await app.send(
             pyrogram.raw.functions.channels.EditParticipants(
