@@ -18,8 +18,10 @@ async def remove_all_subscribers(client, message):
             total_members = chat_info.members_count
 
             # Remove subscribers in batches of 100
-            for offset in range(0, total_members, 100):
-                chat_members = await client.get_chat_members(channel_id, offset=offset)
+            batch_size = 100
+            for offset in range(0, total_members, batch_size):
+                # Get chat members
+                chat_members = await client.get_chat_members(channel_id, limit=batch_size)
                 for member in chat_members:
                     # Restrict the member's permissions
                     await client.restrict_chat_member(
