@@ -14,8 +14,7 @@ async def remove_all_subscribers(client, message):
     if message.from_user.id == int(owner_id):
         try:
             # Get the list of all members in the channel
-            members = await client.get_chat_members(channel_id)
-            for member in members:
+            async for member in client.iter_chat_members(channel_id):
                 # Restrict the member's permissions
                 await client.restrict_chat_member(
                     chat_id=channel_id,
