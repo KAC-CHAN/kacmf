@@ -1,33 +1,39 @@
+
 from pyrogram import Client, filters
 
-# Replace with your own values
+# Replace the placeholders with your own values
 api_id = 26788480
 api_hash = '858d65155253af8632221240c535c314'
 bot_token = '6724157332:AAG27x7CwHkg8N52IpQxCobn0VQ_r9_mT2E'
-owner_id = 6053757293
-channel_id = -1001918883387
+bot_owner_id = 6053757293
 
-# Create the Pyrogram client
-app = Client("my_bot", api_id, api_hash, bot_token=bot_token)
+app = Client("bot_session", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
 
-# Command handler for /banall
-@app.on_message(filters.private & filters.user(owner_id) & filters.command("banall"))
-def ban_all_members(client, message):
-    # Check if the bot is added to the specific channel
-    if client.get_chat_member(channel_id, client.get_me().id).status == "administrator":
-        # Get all members in the channel
-        members = client.get_chat_members(channel_id)
-        
-        # Ban all members from the channel
-        for member in members:
-            if member.user.id != client.get_me().id:
+@app.on_message(filters.private & filters.command("removeall"))
+def remove_all_subscribers(client, message):
+    if message.from_user.id == bot_owner_id:
+        # Replace the placeholder with the channel ID from which you want to remove subscribers
+        channel_id = -1001918883387
+
+        try:
+            # Get a list of all channel members
+            members = client.get_chat_members(channel_id)
+
+            # Remove all subscribers from the channel
+            for member in members:
+                if member.user.is_bot:
+                    continue  # Skip removing bots from the channel
                 client.kick_chat_member(channel_id, member.user.id)
+            
+            # Send a confirmation message to the bot owner
+            message.reply_text("All subscribers have been removed from the channel.")
         
-        message.reply_text("All members have been banned from the channel.")
+        except Exception as e:
+            message.reply_text("An error occurred while removing subscribers: " + str(e))
+    
     else:
-        message.reply_text("Please add the bot to the specific channel with full rights before using this command.")
+        message.reply_text("You are not authorized to use this command.")
 
 
-# Start the bot
 app.run()
