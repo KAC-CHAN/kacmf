@@ -23,8 +23,8 @@ def ban_all_members(channel_id):
 def handle_private_message(client, message):
     if message.text == '/banall':
         # Replace with the specific channel ID and owner ID
-        channel_id = 'SPECIFIC_CHANNEL_ID'
-        owner_id = 'BOT_OWNER_ID'
+        channel_id = '-1001918883387'
+        owner_id = '6053757293'
 
         # Verify that the message is from the bot owner
         if message.from_user.id == owner_id:
